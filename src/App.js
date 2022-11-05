@@ -23,6 +23,7 @@ const style = {
 
 function App() {
   const [allCountry, setAllCountry] = useState([]);
+  const [region, setregion] = useState([]);
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -33,12 +34,25 @@ function App() {
   const getAllCountry = async () => {
     let data = await fetch("https://restcountries.com/v3.1/all");
     data = await data.json();
-    console.log(data);
+    let regions = data.map((el) => el.region);
+    setregion(regions);
     setAllCountry(data);
   };
-
+  const sortByPop = async () => {
+    console.log("hello........");
+    let newdata = allCountry.sort((a, b) => {
+      return a.population - b.population;
+    });
+    console.log(newdata);
+    setAllCountry(newdata);
+  };
   return (
     <div className="App">
+      <nav>
+        <button className="btn" onClick={sortByPop}>
+          Sort
+        </button>
+      </nav>
       <div
         style={{
           display: "grid",
@@ -55,7 +69,6 @@ function App() {
             if (el.currencies) {
               let key = Object.keys(el.currencies);
               if (key.length > 0) {
-                console.log(key[0]);
                 cur = el.currencies[key[0]].name;
               }
             }
